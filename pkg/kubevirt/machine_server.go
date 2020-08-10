@@ -1,18 +1,16 @@
-/*
-Copyright (c) 2020 SAP SE or an SAP affiliate company. All rights reserved.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
+// Copyright (c) 2020 SAP SE or an SAP affiliate company. All rights reserved. This file is licensed under the Apache Software License, v. 2 except as noted otherwise in the LICENSE file
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
 // Package kubevirt contains the cloud kubevirt specific implementations to manage machines
 package kubevirt
@@ -23,21 +21,12 @@ import (
 
 	"github.com/gardener/machine-controller-manager-provider-kubevirt/pkg/kubevirt/util"
 	"github.com/gardener/machine-controller-manager-provider-kubevirt/pkg/kubevirt/validation"
+
 	"github.com/gardener/machine-controller-manager/pkg/util/provider/driver"
 	"github.com/gardener/machine-controller-manager/pkg/util/provider/machinecodes/codes"
 	"github.com/gardener/machine-controller-manager/pkg/util/provider/machinecodes/status"
-
 	"k8s.io/klog"
 )
-
-// NOTE
-//
-// The basic working of the controller will work with just implementing the CreateMachine() & DeleteMachine() methods.
-// You can first implement these two methods and check the working of the controller.
-// Leaving the other methods to NOT_IMPLEMENTED errors status.
-// Once this works you can implement the rest of the methods.
-//
-// Also make sure each method return appropriate errors mentioned in `https://github.com/gardener/machine-controller-manager/blob/master/docs/development/machine_error_codes.md`
 
 // CreateMachine handles a machine creation request
 // REQUIRED METHOD
@@ -163,7 +152,7 @@ func (p *MachinePlugin) GetMachineStatus(ctx context.Context, req *driver.GetMac
 	return response, nil
 }
 
-// ListMachines lists all the machines possibilly created by a providerSpec
+// ListMachines lists all the machines possibly created by a providerSpec
 // Identifying machines created by a given providerSpec depends on the OPTIONAL IMPLEMENTATION LOGIC
 // you have used to identify machines created by a providerSpec. It could be tags/resource-groups etc
 // OPTIONAL METHOD

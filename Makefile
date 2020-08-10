@@ -13,26 +13,13 @@
 # limitations under the License.
 
 BINARY_PATH         := bin/
-COVERPROFILE        := test/output/coverprofile.out
-IMAGE_REPOSITORY    := <link-to-image-repo>
+IMAGE_REPOSITORY    := eu.gcr.io/gardener-project/gardener/machine-controller-manager-provider-kubevirt
 IMAGE_TAG           := $(shell cat VERSION)
-PROVIDER_NAME       := SampleProvider
+PROVIDER_NAME       := Kubevirt
 PROJECT_NAME        := gardener
 CONTROL_NAMESPACE  := default
 CONTROL_KUBECONFIG := dev/target-kubeconfig.yaml
 TARGET_KUBECONFIG  := dev/target-kubeconfig.yaml
-
-#########################################
-# Rules for running helper scripts
-#########################################
-
-.PHONY: rename-provider
-rename-provider:
-	@./hack/rename-provider ${PROVIDER_NAME}
-
-.PHONY: rename-project
-rename-project:
-	@./hack/rename-project ${PROJECT_NAME}
 
 #########################################
 # Rules for starting machine-controller locally
@@ -41,7 +28,6 @@ rename-project:
 .PHONY: start
 start:
 	@GO111MODULE=on go run \
-			-mod=vendor \
 			cmd/machine-controller/main.go \
 			--control-kubeconfig=$(CONTROL_KUBECONFIG) \
 			--target-kubeconfig=$(TARGET_KUBECONFIG) \
@@ -64,17 +50,16 @@ revendor:
 	@env GO111MODULE=on go mod vendor -v
 	@env GO111MODULE=on go mod tidy -v
 
-.PHONY: update-dependencies
-update-dependencies:
-	@env GO111MODULE=on go get -u
-
 #########################################
 # Rules for testing
 #########################################
 
-.PHONY: test-unit
-test-unit:
-	.ci/test
+.PHONY: test
+test:
+	@.ci/test
+.PHONY: check
+check:
+	@.ci/check
 
 #########################################
 # Rules for build/release
@@ -97,7 +82,7 @@ docker-image:
 
 .PHONY: docker-login
 docker-login:
-	@gcloud auth login
+	@gcloud auth activate-service-account --key-file .kube-secrets/gcr/gcr-readwrite.json
 
 .PHONY: docker-push
 docker-push:
