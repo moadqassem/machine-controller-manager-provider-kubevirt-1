@@ -13,6 +13,7 @@
 # limitations under the License.
 
 BINARY_PATH         := bin/
+COVERPROFILE        := test/output/coverprofile.out
 IMAGE_REPOSITORY    := eu.gcr.io/gardener-project/gardener/machine-controller-manager-provider-kubevirt
 IMAGE_TAG           := $(shell cat VERSION)
 PROVIDER_NAME       := Kubevirt
@@ -86,7 +87,7 @@ docker-login:
 
 .PHONY: docker-push
 docker-push:
-	@if ! docker images $(IMAGE_REPOSITORY) | awk '{ print $$2 }' | grep -q -F $(IMAGE_TAG); then echo "$(IMAGE_REPOSITORY) version $(IMAGE_TAG) is not yet built. Please run 'make docker-images'"; false; fi
+	@if ! docker images $(IMAGE_REPOSITORY) | awk '{ print $$2 }' | grep -q -F $(IMAGE_TAG); then echo "$(IMAGE_REPOSITORY) version $(IMAGE_TAG) is not yet built. Please run 'make docker-image'"; false; fi
 	@gcloud docker -- push $(IMAGE_REPOSITORY):$(IMAGE_TAG)
 
 .PHONY: rename-binaries
