@@ -91,6 +91,12 @@ func (p *MachinePlugin) DeleteMachine(ctx context.Context, req *driver.DeleteMac
 		return nil, prepareErrorf(err, "could not decode provider spec and secret")
 	}
 
+	validationErrors := validation.ValidateKubevirtSecret(providerSpec, req.Secret)
+	if validationErrors != nil {
+		err = fmt.Errorf("error while validating ProviderSpec %v", validationErrors)
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
 	providerID, err := p.SPI.DeleteMachine(ctx, req.Machine.Name, req.Machine.Spec.ProviderID, providerSpec, req.Secret)
 	if err != nil {
 		return nil, prepareErrorf(err, "could not delete machine %q", req.Machine.Name)
@@ -126,6 +132,12 @@ func (p *MachinePlugin) GetMachineStatus(ctx context.Context, req *driver.GetMac
 	providerSpec, err := decodeProviderSpecAndSecret(req.MachineClass, req.Secret)
 	if err != nil {
 		return nil, prepareErrorf(err, "could not decode provider spec and secret")
+	}
+
+	validationErrors := validation.ValidateKubevirtSecret(providerSpec, req.Secret)
+	if validationErrors != nil {
+		err = fmt.Errorf("error while validating ProviderSpec %v", validationErrors)
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	providerID, err := p.SPI.GetMachineStatus(ctx, req.Machine.Name, req.Machine.Spec.ProviderID, providerSpec, req.Secret)
@@ -164,6 +176,12 @@ func (p *MachinePlugin) ListMachines(ctx context.Context, req *driver.ListMachin
 	providerSpec, err := decodeProviderSpecAndSecret(req.MachineClass, req.Secret)
 	if err != nil {
 		return nil, prepareErrorf(err, "could not decode provider spec and secret")
+	}
+
+	validationErrors := validation.ValidateKubevirtSecret(providerSpec, req.Secret)
+	if validationErrors != nil {
+		err = fmt.Errorf("error while validating ProviderSpec %v", validationErrors)
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	machineList, err := p.SPI.ListMachines(ctx, providerSpec, req.Secret)
